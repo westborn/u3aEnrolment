@@ -1,0 +1,18 @@
+{
+  "timeZone": "Australia/Sydney",
+  "dependencies": {
+    "libraries": [
+      {
+        "userSymbol": "wbLib",
+        "version": "3",
+        "libraryId": "1oLToj6noRZvFkLNP3-0vWRK1BJNHO9bie3gAHi81qSF3vWrlJMOTRFzG"
+      }
+    ]
+  },
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "ANYONE_ANONYMOUS"
+  }
+}
