@@ -1,0 +1,19 @@
+{
+  "name": "u3a-enrolment",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "package": "svelte-kit package",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "next",
+    "@sveltejs/kit": "next",
+    "svelte": "^3.44.0",
+    "vite": "^3.0.0",
+    "@types/google-apps-script": "^1.0.53"
+  },
+  "type": "module"
+}
