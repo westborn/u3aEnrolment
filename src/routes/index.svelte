@@ -5,10 +5,10 @@
       'https://script.google.com/macros/s/AKfycbzFuYcnrLhLT64bgbgHO3ffmJTqkSgfGDMn0sWcLIfHJdrwRNqXRQphuxfUm3P6Vv7Dpw/exec?requestType=getCourseDetail',
       { method: 'POST', body: JSON.stringify({ action: 'get_data' }) }
     )
-    const courseResponse = await response.json()
-    console.log(JSON.stringify(courseResponse.result, null, 2))
+    const courseDetailResponse = await response.json()
+    console.log(`Load response: ${JSON.stringify(courseDetailResponse.result, null, 2)}`)
     return {
-      props: { courseResponse },
+      props: { courseDetailResponse },
     }
   }
 </script>
@@ -17,20 +17,30 @@
   import { currentUserEmail, currentUserName, coursesEnrolled } from '$lib/stores.js'
   import CourseCard from '../lib/CourseCard.svelte'
 
-  export let courseResponse
+  export let courseDetailResponse
 
-  function handleEnrol() {
+  async function handleEnrol() {
     console.log('Enrolling')
-    const enrolData = {
-      action: 'enrol',
-      UserName: $currentUserName,
-      UserEmail: $currentUserEmail,
-      coursesEnrolled: $coursesEnrolled,
+    fetchingData = true
+    errorMessage = ''
+    const res = await fetch('/api?requestType=addEnrolments', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: $currentUserName,
+        email: $currentUserEmail,
+        coursesEnrolled: $coursesEnrolled,
+      }),
+    })
+    const response = await res.json()
+    fetchingData = false
+    console.log('response', response)
+    if (response.result === 'error') {
+      errorMessage = response.data
+      return
     }
-    console.log(JSON.stringify(enrolData, null, 2))
   }
-  ;``
-  let courseDetails = courseResponse?.result === 'ok' ? courseResponse.data.data : {}
+
+  let courseDetails = courseDetailResponse?.result === 'ok' ? courseDetailResponse.data.data : {}
 
   let fetchingData = false
   let errorMessage = ''

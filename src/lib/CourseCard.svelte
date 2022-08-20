@@ -3,6 +3,15 @@
   import { coursesEnrolled } from '$lib/stores.js'
 
   export let course
+
+  function onChange({ target }) {
+    const { value, checked } = target
+    if (checked) {
+      $coursesEnrolled = [...$coursesEnrolled, value]
+    } else {
+      $coursesEnrolled = $coursesEnrolled.filter((item) => item !== value)
+    }
+  }
 </script>
 
 {#if course.courseStatus === 'Enrol?' || course.courseStatus === 'Waitlist?'}
@@ -11,7 +20,8 @@
       <input
         class="h-7 w-7 rounded  bg-primary-100 border-primary-500 text-primary-500 focus:ring-primary-200"
         type="checkbox"
-        bind:group={$coursesEnrolled}
+        checked={$coursesEnrolled.includes(course.title)}
+        on:change={onChange}
         value={course.title}
       />
       <p class="text-sm w-12">{course.courseStatus}</p>
