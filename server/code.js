@@ -82,21 +82,27 @@ function addEnrolments(request, ss) {
   var enrolmentSheet = ss.getSheetByName('OnlineEnrolments')
 
   //map the enrolments to an array of ["name", "email", courseEnroled]
-  const enrolments = request.coursesEnrolled.map((course) => [request.name, request.email, course])
+  const enrolments = request.coursesEnrolled.map((course) => [
+    new Date(),
+    request.name,
+    request.email,
+    course.title,
+    course.status,
+  ])
 
-  //write th enrolments for this member to the sheet
+  //write the enrolments for this member to the sheet
   enrolmentSheet
     .getRange(enrolmentSheet.getLastRow() + 1, 1, enrolments.length, enrolments[0].length)
     .setValues(enrolments)
 
   //set a formula in the last 2 columns as error checking
   const formulas = [
-    'ArrayFormula(index(Members,match(TRUE, exact(A2,memberName),0),1))',
-    'ArrayFormula(index(Members,match(TRUE, exact(B2,memberEmail),0),1))',
+    'ArrayFormula(index(Members,match(TRUE, exact(B2,memberName),0),1))',
+    'ArrayFormula(index(Members,match(TRUE, exact(C2,memberEmail),0),1))',
   ]
-  enrolmentSheet.getRange(2, 4, 1, 2).setFormulas([formulas])
-  const fillDownRange = enrolmentSheet.getRange(2, 4, enrolmentSheet.getLastRow() - 1)
-  enrolmentSheet.getRange(2, 4, 1, 2).copyTo(fillDownRange)
+  enrolmentSheet.getRange(2, 6, 1, 2).setFormulas([formulas])
+  const fillDownRange = enrolmentSheet.getRange(2, 6, enrolmentSheet.getLastRow() - 1)
+  enrolmentSheet.getRange(2, 6, 1, 2).copyTo(fillDownRange)
 
   return sendResponse('ok', { data: enrolments })
 }
