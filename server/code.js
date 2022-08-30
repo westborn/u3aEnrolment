@@ -1,5 +1,5 @@
 this.CONFIG = {
-  TERM_SHEET: '1ACJNTS7f8-9r9M9hommyg2pHtHgWjUH2kaQqC_7VyDE',
+  TERM_SHEET: '1PFIu02Bn4CkuC6gbWaLlh_yFFEqKbsnXIUlQxl202E0',
   SAMPLE_DETAIL: {
     title: '',
     presenter: '',
@@ -118,32 +118,10 @@ function addEnrolments(request, ss) {
   fillDownRange = enrolmentSheet.getRange(2, emailCheckCol, lastRow)
   enrolmentSheet.getRange(2, emailCheckCol, 1, 1).copyTo(fillDownRange)
 
-  // get all the enrolments to-date
-  const enrolmentData = enrolmentSheet.getDataRange().getValues()
-  const allEnrolments = wbLib.getJsonArrayFromData(enrolmentData)
-
-  // sum them by enrolment type (enrol or waitlist)
-  const occurrences = allEnrolments
-    .reduce((acc, curr, idx) => {
-      if (acc[curr.courseEnrolledIn]) {
-        ++acc[curr.courseEnrolledIn][curr.status === 'Enrol?' ? 'enrol' : 'waitlist']
-      } else {
-        acc[curr.courseEnrolledIn] = { enrol: curr.status === 'Enrol?' ? 1 : 0, waitlist: curr.status === 'Waitlist?' ? 1 : 0 }
-      }
-      return acc
-    }, {})
-  console.log(Object.keys(occurrences))
-  console.log(Object.values(occurrences))
-  console.log(Object.entries(occurrences))
-  console.log(Object.values(occurrences).reduce((acc, {enrol, waitlist}) => {return acc+ enrol + waitlist}, 0))
-
-  const a = Object.entries(occurrences).map(([title, { enrol, waitlist }]) => { return ({ title: title, total: enrol + waitlist }) })
-  console.log(JSON.stringify(a, null, 2))
-
-  //get courseDetail sheet
-  const courseData = ss.getSheetByName('CourseDetails').getDataRange().getValues()
-  const allCourses = wbLib.getJsonArrayFromData(courseData)
-  const courseHeaders = courseData.shift()
+  //get the list of titles that the user enroled for and update 'CourseDetails' sheet
+  const coursesEnroled = enrolments.map((course) => course.title)
+  //TODO
+  updateEnrolmentStats(ss, coursesEnroled)
 
   // we're done here
   return sendResponse('ok', { data: enrolments })
@@ -160,4 +138,28 @@ function sendResponse(status, data) {
       ContentService.MimeType.JSON
     )
   }
+}
+
+function updateEnrolmentStats(ss, enroledCourses) {
+  const courseData = ss.getSheetByName('CourseDetails').getDataRange().getValues()
+  const allCourses = wbLib.getJsonArrayFromData(courseData)
+  const columnnHeadings = courseData[0]
+
+  for (const enroledCourse of enroledCourses) {
+    const selectedCourse = allCourses.find((course) => course.title === enroledCourse)
+    if (selectedCourse.courseStatus === 'Enrol?') {
+      selectedCourse.numberCurrentlyEnroled++
+      selectedCourse.courseStatus =
+        selectedCourse.max > 0 && selectedCourse.numberCurrentlyEnroled >= selectedCourse.max ? 'Waitlist?' : 'Enrol?'
+    }
+  }
+
+  var columnData, columnNumber
+  columnData = allCourses.map((column) => [column.numberCurrentlyEnroled])
+  columnNumber = columnnHeadings.indexOf('numberCurrentlyEnroled') + 1
+  ss.getSheetByName('CourseDetails').getRange(2, columnNumber, columnData.length, 1).setValues(columnData)
+
+  columnData = allCourses.map((column) => [column.courseStatus])
+  columnNumber = columnnHeadings.indexOf('courseStatus') + 1
+  ss.getSheetByName('CourseDetails').getRange(2, columnNumber, columnData.length, 1).setValues(columnData)
 }
