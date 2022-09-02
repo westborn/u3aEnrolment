@@ -18,7 +18,7 @@
   <div class="flex flex-row">
     <div class="flex flex-col mr-6 mt-2">
       <input
-        class="h-7 w-7 rounded  bg-primary-100 border-primary-500 text-primary-500 focus:ring-primary-200"
+        class="h-7 w-7 rounded  bg-secondary-100 border-secondary-500 text-secondary-500 focus:ring-secondary-200"
         type="checkbox"
         checked={$coursesEnrolled.includes(course.title)}
         on:change={onChange}

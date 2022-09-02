@@ -8,7 +8,7 @@
   <div class="flex 1 mr-2">
     <slot name="head" />
   </div>
-  <button class="text-gray-500 text-xs font-medium" on:click={handleClick}>(...)</button>
+  <button class="text-gray-500 text-xs" on:click={handleClick}>&#9658 more details &#9668 </button>
 </div>
 
 {#if open}

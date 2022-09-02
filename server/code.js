@@ -58,8 +58,8 @@ function doPost(e) {
         break
     }
   } catch (err) {
-    console.log(err)
-    res = sendResponse('error', err)
+    console.log('Function Failed: ', err)
+    res = sendResponse('error', `Function Failed - ${err}`)
   }
   return res
 }
@@ -71,11 +71,18 @@ function getCourseDetails(request, ss) {
   return sendResponse('ok', { data: allCourses })
 }
 
+function validateEmail(mail) {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    return true
+  }
+  return false
+}
+
 function addEnrolments(request, ss) {
   if (!request.name || request.name.trim() === '') {
     return sendResponse('error', 'Invalid name for enrolment')
   }
-  if (!request.email || request.email.trim() === '') {
+  if (!request.email || validateEmail(request.email) === false) {
     return sendResponse('error', 'Invalid email for enrolment')
   }
   if (!request.coursesEnrolled || request.coursesEnrolled.length === 0) {
@@ -119,9 +126,8 @@ function addEnrolments(request, ss) {
   enrolmentSheet.getRange(2, emailCheckCol, 1, 1).copyTo(fillDownRange)
 
   //get the list of titles that the user enroled for and update 'CourseDetails' sheet
-  const coursesEnroled = enrolments.map((course) => course.title)
-  //TODO
-  updateEnrolmentStats(ss, coursesEnroled)
+  const enroledCourses = request.coursesEnrolled.map((course) => course.title)
+  updateEnrolmentStats(ss, enroledCourses)
 
   // we're done here
   return sendResponse('ok', { data: enrolments })
@@ -133,7 +139,7 @@ function sendResponse(status, data) {
       ContentService.MimeType.JSON
     )
   } catch (err) {
-    console.log(err)
+    console.log('SendResponse: ', err)
     return ContentService.createTextOutput(JSON.stringify({ result: 'error', data: err })).setMimeType(
       ContentService.MimeType.JSON
     )

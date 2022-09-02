@@ -34,9 +34,12 @@
     errorMessage = ''
     // make an object with course and status
     userEnrolments = $coursesEnrolled.map((courseName) => {
+      const enrolment = courseDetails.find((el) => el.title === courseName)
       return {
         title: courseName,
-        status: courseDetails.find((el) => el.title === courseName).courseStatus,
+        status: enrolment.courseStatus,
+        dates: enrolment.dates,
+        time: enrolment.time,
       }
     })
     // send request to server
@@ -63,43 +66,42 @@
     'text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg'
 </script>
 
-<section class="container mx-auto max-w-prose px-3">
-  <h4 class="text-xl font-bold text-accent">Course Enrolment</h4>
-
-  <div class="relative mt-6 w-full">
-    <input
-      id="email"
-      name="email"
-      bind:value={$currentUserEmail}
-      type="text"
-      class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
-      placeholder="someone@gmail.com"
-    />
-    <label
-      for="email"
-      class="absolute left-2 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-gray-600"
-      >Email address</label
-    >
-  </div>
-
-  <div class="relative mt-6 w-full">
-    <input
-      id="name"
-      name="name"
-      bind:value={$currentUserName}
-      type="text"
-      class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
-      placeholder="someone@gmail.com"
-    />
-    <label
-      for="name"
-      class="absolute left-2 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-gray-600"
-      >Name for this enrolment</label
-    >
-  </div>
-</section>
-
 {#if !enrolmentNotification}
+  <section class="container mx-auto max-w-prose px-3">
+    <h3 class="text-xl font-bold text-accent">Course Enrolment</h3>
+    <div class="relative mt-6 w-full">
+      <input
+        id="email"
+        name="email"
+        bind:value={$currentUserEmail}
+        type="text"
+        class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
+        placeholder="someone@gmail.com"
+      />
+      <label
+        for="email"
+        class="absolute left-2 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-gray-600"
+        >Email address</label
+      >
+    </div>
+
+    <div class="relative mt-6 w-full">
+      <input
+        id="name"
+        name="name"
+        bind:value={$currentUserName}
+        type="text"
+        class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
+        placeholder="someone@gmail.com"
+      />
+      <label
+        for="name"
+        class="absolute left-2 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-gray-600"
+        >Name for this enrolment</label
+      >
+    </div>
+  </section>
+
   <section class="container mx-auto max-w-prose px-3">
     <div class="py-4">
       {#each courseDetails as course}
@@ -126,8 +128,9 @@
 {/if}
 
 {#if enrolmentNotification}
-  <section class="container mt-6 mx-auto max-w-prose px-3">
-    <CompletedEnrolment {userEnrolments} />
+  <section class="container mx-auto max-w-prose px-3">
+    <h3 class="text-xl font-bold text-accent">Course Enrolment</h3>
+    <CompletedEnrolment requestedCourses={userEnrolments} />
   </section>
 {/if}
 
