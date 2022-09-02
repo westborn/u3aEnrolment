@@ -1,15 +1,15 @@
 <script>
   import Accordion from './components/Accordion.svelte'
-  import { coursesEnrolled } from '$lib/stores.js'
+  import { coursesEnroled } from '$lib/stores.js'
 
   export let course
 
   function onChange({ target }) {
     const { value, checked } = target
     if (checked) {
-      $coursesEnrolled = [...$coursesEnrolled, value]
+      $coursesEnroled = [...$coursesEnroled, value]
     } else {
-      $coursesEnrolled = $coursesEnrolled.filter((item) => item !== value)
+      $coursesEnroled = $coursesEnroled.filter((item) => item !== value)
     }
   }
 </script>
@@ -20,7 +20,7 @@
       <input
         class="h-7 w-7 rounded  bg-secondary-100 border-secondary-500 text-secondary-500 focus:ring-secondary-200"
         type="checkbox"
-        checked={$coursesEnrolled.includes(course.title)}
+        checked={$coursesEnroled.includes(course.title)}
         on:change={onChange}
         value={course.title}
       />

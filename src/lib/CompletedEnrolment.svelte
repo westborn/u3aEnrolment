@@ -1,5 +1,5 @@
 <script>
-  import { currentUserEmail, currentUserName, coursesEnrolled } from '$lib/stores.js'
+  import { currentUserEmail, currentUserName, coursesEnroled } from '$lib/stores.js'
 
   export let requestedCourses
 
@@ -8,11 +8,11 @@
 </script>
 
 <p class="text-xl mt-6">{$currentUserName}</p>
-<p class="text-xl mt-1">{$currentUserEmail}</p>
+<p class="text-base mt-1">{$currentUserEmail}</p>
 
 {#if enroledCourses.length > 0}
   <div class="flex flex-col mt-6">
-    <p class="px-4">You have been enrolled for:</p>
+    <p class="px-4">You have been enroled for:</p>
     <ul class="ml-20 bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
       {#each enroledCourses as course}
         <li class="px-6 py-2 border-b border-gray-200 w-full">

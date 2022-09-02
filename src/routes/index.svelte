@@ -14,7 +14,7 @@
 </script>
 
 <script>
-  import { currentUserEmail, currentUserName, coursesEnrolled } from '$lib/stores.js'
+  import { currentUserEmail, currentUserName, coursesEnroled } from '$lib/stores.js'
   import CourseCard from '../lib/CourseCard.svelte'
   import CompletedEnrolment from '../lib/CompletedEnrolment.svelte'
 
@@ -29,11 +29,11 @@
   let enrolmentNotification = false
 
   async function handleEnrol() {
-    console.log('Enrolling')
+    console.log('Enroling')
     fetchingData = true
     errorMessage = ''
     // make an object with course and status
-    userEnrolments = $coursesEnrolled.map((courseName) => {
+    userEnrolments = $coursesEnroled.map((courseName) => {
       const enrolment = courseDetails.find((el) => el.title === courseName)
       return {
         title: courseName,
@@ -48,7 +48,7 @@
       body: JSON.stringify({
         name: $currentUserName,
         email: $currentUserEmail,
-        coursesEnrolled: userEnrolments,
+        coursesEnroled: userEnrolments,
       }),
     })
     const response = await res.json()
@@ -69,6 +69,16 @@
 {#if !enrolmentNotification}
   <section class="container mx-auto max-w-prose px-3">
     <h3 class="text-xl font-bold text-accent">Course Enrolment</h3>
+
+    <p class="mt-2">Welcome!</p>
+    <p>Please review the courses on offer for this term on the Current Program page.</p>
+    <p class="mt-2">
+      When you have decided which courses you want to enrol in, fill in your details in the form below, select the
+      courses you are interested in and click the "Enrol Me!" button. Please only enrol ONCE for a course. If you enrol
+      more than once then other members may not be able to join that class.
+    </p>
+    <p class="mt-2">IMPORTANT – you may need to scroll to the bottom of the form to complete the enrolment.</p>
+
     <div class="relative mt-6 w-full">
       <input
         id="email"
@@ -134,4 +144,4 @@
   </section>
 {/if}
 
-<!-- <pre>{JSON.stringify($coursesEnrolled, null, 2)}</pre> -->
+<!-- <pre>{JSON.stringify($coursesEnroled, null, 2)}</pre> -->

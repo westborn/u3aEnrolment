@@ -12,7 +12,7 @@ function testadd() {
     {
       name: 'George1 Stone',
       email: 'george1@westborn.com.au',
-      coursesEnrolled: [
+      coursesEnroled: [
         { title: 'testing', status: 'Enrol?' },
         { title: 'tester', status: 'Waitlist?' },
       ],
@@ -85,13 +85,13 @@ function addEnrolments(request, ss) {
   if (!request.email || validateEmail(request.email) === false) {
     return sendResponse('error', 'Invalid email for enrolment')
   }
-  if (!request.coursesEnrolled || request.coursesEnrolled.length === 0) {
+  if (!request.coursesEnroled || request.coursesEnroled.length === 0) {
     return sendResponse('error', 'No courses fror enrolment')
   }
   const enrolmentSheet = ss.getSheetByName('OnlineEnrolments')
 
   //map the enrolments to an array of ["name", "email", courseEnroled]
-  const enrolments = request.coursesEnrolled.map((course) => [
+  const enrolments = request.coursesEnroled.map((course) => [
     new Date(),
     request.name,
     request.email,
@@ -126,7 +126,7 @@ function addEnrolments(request, ss) {
   enrolmentSheet.getRange(2, emailCheckCol, 1, 1).copyTo(fillDownRange)
 
   //get the list of titles that the user enroled for and update 'CourseDetails' sheet
-  const enroledCourses = request.coursesEnrolled.map((course) => course.title)
+  const enroledCourses = request.coursesEnroled.map((course) => course.title)
   updateEnrolmentStats(ss, enroledCourses)
 
   // we're done here

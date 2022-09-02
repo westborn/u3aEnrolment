@@ -2,6 +2,6 @@ import { writable } from 'svelte/store'
 
 const currentUserEmail = writable(null)
 const currentUserName = writable(null)
-const coursesEnrolled = writable([])
+const coursesEnroled = writable([])
 
-export { currentUserEmail, currentUserName, coursesEnrolled }
+export { currentUserEmail, currentUserName, coursesEnroled }
