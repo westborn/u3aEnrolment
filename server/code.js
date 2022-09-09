@@ -1,9 +1,5 @@
 this.CONFIG = {
   TERM_SHEET: '1PFIu02Bn4CkuC6gbWaLlh_yFFEqKbsnXIUlQxl202E0',
-  SAMPLE_DETAIL: {
-    title: '',
-    presenter: '',
-  },
 }
 
 function testadd() {
@@ -13,8 +9,10 @@ function testadd() {
       name: 'George1 Stone',
       email: 'george1@westborn.com.au',
       coursesEnroled: [
-        { title: 'testing', status: 'Enrol?' },
-        { title: 'tester', status: 'Waitlist?' },
+        { title: 'An Indigenous Talk', status: 'Enrol?' },
+        { title: 'An Indigenous Walk', status: 'Waitlist?' },
+        { title: 'Book Club Bermagui', status: 'Enrol?' },
+        { title: 'Fun French for Beginners and Forgetters', status: 'Waitlist?' },
       ],
     },
     ss
@@ -129,8 +127,72 @@ function addEnrolments(request, ss) {
   const enroledCourses = request.coursesEnroled.map((course) => course.title)
   updateEnrolmentStats(ss, enroledCourses)
 
+  // send an email confirmation with all enrolments
+  // get all the course details
+  const courseData = ss.getSheetByName('CourseDetails').getDataRange().getValues()
+  const allCourses = wbLib.getJsonArrayFromData(courseData)
+
+  // loop through enroled courses
+  const enroledCourseList = request.coursesEnroled.filter((course) => course.status === 'Enrol?')
+  const enrolHTML =
+    enroledCourseList.length > 0
+      ? `<p style="background-color: #d25f15; color: #f1f1f1; font-weight: bold">Courses you are Enroled for:</p>
+    ${buildHTMLOutput(enroledCourseList, allCourses)}`
+      : ''
+
+  // loop through waitlisted courses
+  const waitlistedCourseList = request.coursesEnroled.filter((course) => course.status === 'Waitlist?')
+  const waitlistHTML =
+    waitlistedCourseList.length > 0
+      ? `<p style="background-color: #d25f15; color: #f1f1f1; font-weight: bold">Courses you are Waitlisted for:</p>
+      ${buildHTMLOutput(waitlistedCourseList, allCourses)}`
+      : ''
+
+  const fieldReplacer = {
+    memberName: request.name,
+    classInfo: enrolHTML + waitlistHTML,
+  }
+  // get the draft Gmail message to use as a template
+  const emailTemplate = wbLib.getGmailTemplateFromDrafts('TEMPLATE - Course Enrolment Confirmation')
+
+  try {
+    const msgObj = wbLib.fillinTemplateFromObject(emailTemplate.message, fieldReplacer)
+    const msgText = wbLib.stripHTML(msgObj.text)
+    GmailApp.createDraft(request.email, 'U3A Bermagui - Course Enrolment Confirmation', msgText, {
+      htmlBody: msgObj.html,
+      // bcc: 'a.bbc@email.com',
+      // cc: 'a.cc@email.com',
+      // from: 'an.alias@email.com',
+      // name: 'name of the sender',
+      // replyTo: 'a.reply@email.com',
+      attachments: emailTemplate.attachments,
+    })
+  } catch (e) {
+    throw new Error("Oops - can't create new Gmail draft")
+  }
+
   // we're done here
   return sendResponse('ok', { data: enrolments })
+}
+
+function buildHTMLOutput(courseList, allCourses) {
+  const res = courseList
+    .map((courseItem) => {
+      const cR = allCourses.find((course) => course.title === courseItem.title)
+      const withPresenter = cR.presenter ? ` with ${cR.presenter}` : ''
+      const tmp = `
+    <b>${cR.title}</b><font color="#606060">${withPresenter}</font>
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;When: ${cR.days} ${cR.dates}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;Time: ${cR.time}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;Where: ${cR.location}
+    <br>&nbsp;&nbsp;&nbsp;&nbsp;Contact: ${cR.contact} - ${cR.phone}
+    <br>
+    <br>
+    `
+      return tmp
+    })
+    .join('<br>')
+  return res
 }
 
 function sendResponse(status, data) {

@@ -6,7 +6,8 @@
     "build": "vite build",
     "package": "svelte-kit package",
     "preview": "vite preview",
-    "prepare": "svelte-kit sync"
+    "prepare": "svelte-kit sync",
+    "push": "clasp push"
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "next",
