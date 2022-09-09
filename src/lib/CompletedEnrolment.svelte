@@ -37,3 +37,12 @@
     </ul>
   </div>
 {/if}
+
+<div class="mt-12">
+  <a
+    href="https://u3abermagui.com.au/current-program/"
+    class="text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg "
+    >Back to the Program</a
+  >
+  <p class="mt-12 font-bold text-accent">An email has been sent to you containing details of this enrolment.</p>
+</div>
