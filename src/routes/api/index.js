@@ -1,5 +1,5 @@
 const googleWebAppUrl =
-  'https://script.google.com/macros/s/AKfycbwtPP87K5ssxAu9i_vnKC6WDQCEXk4QWPOBy_rVoR5N9G_dwv-F1gJMzhGezD3ym1Q0ow/exec'
+  'https://script.google.com/macros/s/AKfycbxXbkVU4DS3Yg9SvGKYSvUTq0tCoW7J9g3BNzSW6UdQMDlrk4dzCg8jteqmV50IZ1o19Q/exec'
 //
 // send a post request to the google sheet backend web app
 // use the search param to determine which function to call on the backend
