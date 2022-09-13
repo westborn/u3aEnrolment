@@ -1,3 +1,5 @@
+import { json as json$1 } from '@sveltejs/kit'
+
 const googleWebAppUrl =
   'https://script.google.com/macros/s/AKfycbxXbkVU4DS3Yg9SvGKYSvUTq0tCoW7J9g3BNzSW6UdQMDlrk4dzCg8jteqmV50IZ1o19Q/exec'
 //
@@ -25,5 +27,5 @@ export async function POST({ request }) {
     body: JSON.stringify(data),
   })
   const res = await response.json()
-  return { body: res }
+  return json$1(res)
 }

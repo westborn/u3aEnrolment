@@ -1,28 +1,12 @@
-<script context="module">
-  export async function load({ fetch }) {
-    console.log('Sending')
-    const response = await fetch(
-      'https://script.google.com/macros/s/AKfycbxXbkVU4DS3Yg9SvGKYSvUTq0tCoW7J9g3BNzSW6UdQMDlrk4dzCg8jteqmV50IZ1o19Q/exec?requestType=getCourseDetail',
-      { method: 'POST', body: JSON.stringify({ action: 'get_data' }) }
-    )
-    const courseDetailResponse = await response.json()
-    console.log(`Load response: ${JSON.stringify(courseDetailResponse.result, null, 2)}`)
-    return {
-      props: { courseDetailResponse },
-    }
-  }
-</script>
-
 <script>
   import { currentUserEmail, currentUserName, coursesEnroled } from '$lib/stores.js'
   import CourseCard from '../lib/CourseCard.svelte'
   import CompletedEnrolment from '../lib/CompletedEnrolment.svelte'
 
-  export let courseDetailResponse
+  export let data
+  let courseDetails = data?.result === 'ok' ? data.data.data : {}
 
   let userEnrolments = []
-
-  let courseDetails = courseDetailResponse?.result === 'ok' ? courseDetailResponse.data.data : {}
 
   let fetchingData = false
   let errorMessage = ''
