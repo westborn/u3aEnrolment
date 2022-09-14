@@ -13,9 +13,21 @@
   let enrolmentNotification = false
 
   async function handleEnrol() {
-    console.log('Enroling')
+    // console.log('Enroling')
     fetchingData = true
     errorMessage = ''
+
+    if (!validateEmail($currentUserEmail)) {
+      fetchingData = false
+      errorMessage = 'Please enter a valid email address'
+      return
+    }
+    if ($coursesEnroled.length === 0) {
+      fetchingData = false
+      errorMessage = 'No courses selectedCourse for enrolment'
+      return
+    }
+
     // make an object with course and status
     userEnrolments = $coursesEnroled.map((courseName) => {
       const enrolment = courseDetails.find((el) => el.title === courseName)
@@ -37,13 +49,20 @@
     })
     const response = await res.json()
 
-    console.log('response', response)
+    // console.log('response', response)
     if (response.result === 'error') {
       fetchingData = false
       errorMessage = response.data
       return
     }
     enrolmentNotification = true
+  }
+
+  function validateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+      return true
+    }
+    return false
   }
 
   let btnClasses =
@@ -108,10 +127,11 @@
     {#if errorMessage}
       <p class="m-2 text-red-500">{errorMessage}</p>
     {/if}
-    <div class="mt-6 flex justify-between">
-      <button type="button" on:click={() => handleEnrol()} class={btnClasses}>Enrol Me! </button>
-    </div>
-
+    {#if !fetchingData}
+      <div class="mt-6 flex justify-between">
+        <button type="button" on:click={() => handleEnrol()} class={btnClasses}>Enrol Me! </button>
+      </div>
+    {/if}
     {#if fetchingData}
       <div
         style="border-top-color:transparent"

@@ -84,7 +84,7 @@ function addEnrolments(request, ss) {
     return sendResponse('error', 'Invalid email for enrolment')
   }
   if (!request.coursesEnroled || request.coursesEnroled.length === 0) {
-    return sendResponse('error', 'No courses fror enrolment')
+    return sendResponse('error', 'No courses selectedCourse for enrolment')
   }
   const enrolmentSheet = ss.getSheetByName('OnlineEnrolments')
 
