@@ -29,7 +29,7 @@
     <div class="flex flex-col py-1">
       <Accordion>
         <div slot="head">
-          <p class="text-lg font-semibold text-gray-700">{course.title}</p>
+          <p class="text-lg font-semibold text-gray-700">{course.summary}</p>
         </div>
         <div slot="details">
           <p class="p-2 bg-gray-100 text-base">{course.description}</p>

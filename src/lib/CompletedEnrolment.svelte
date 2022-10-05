@@ -16,7 +16,7 @@
     <ul class="ml-20 bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
       {#each enroledCourses as course}
         <li class="px-6 py-2 border-b border-gray-200 w-full">
-          <p>{course.title}</p>
+          <p>{course.summary}</p>
           <p class="text-sm">{course.dates} {course.time}</p>
         </li>
       {/each}
@@ -30,7 +30,7 @@
     <ul class="ml-20 bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
       {#each waitlistedCourses as course}
         <li class="px-6 py-2 border-b border-gray-200 w-full">
-          <p>{course.title}</p>
+          <p>{course.summary}</p>
           <p class="text-sm">{course.dates} {course.time}</p>
         </li>
       {/each}

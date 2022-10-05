@@ -33,6 +33,7 @@
       const enrolment = courseDetails.find((el) => el.title === courseName)
       return {
         title: courseName,
+        summary: enrolment.summary,
         status: enrolment.courseStatus,
         dates: enrolment.dates,
         time: enrolment.time,

@@ -158,7 +158,12 @@ function addEnrolments(request, ss) {
   try {
     const msgObj = wbLib.fillinTemplateFromObject(emailTemplate.message, fieldReplacer)
     const msgText = wbLib.stripHTML(msgObj.text)
-    GmailApp.createDraft(request.email, 'U3A Bermagui - Course Enrolment Confirmation', msgText, {
+    //
+    // GmailApp.createDraft(request.email, 'U3A Bermagui - Course Enrolment Confirmation', msgText, {
+    // OR
+    // GmailApp.sendEmail(request.email, 'U3A Bermagui - Course Enrolment Confirmation', msgText, {
+    //
+    GmailApp.sendEmail(request.email, 'U3A Bermagui - Course Enrolment Confirmation', msgText, {
       htmlBody: msgObj.html,
       // bcc: 'a.bbc@email.com',
       // cc: 'a.cc@email.com',
