@@ -111,7 +111,7 @@
       <label
         for="name"
         class="absolute left-2 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-gray-600"
-        >Name for this enrolment</label
+        >Your Name</label
       >
     </div>
   </section>
