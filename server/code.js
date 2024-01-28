@@ -1,5 +1,5 @@
 this.CONFIG = {
-  TERM_SHEET: '1yKqh59ANKnCaIo09SgPpO8IfZk6N4OgbRwwY09aZEz4',
+  TERM_SHEET: '1E56MRdLNvy1Ps_KrxWysY-H1AWopUFuXBQmoCjO1-1Y',
 }
 
 function testadd() {
@@ -8,12 +8,7 @@ function testadd() {
     {
       name: 'George1 Stone',
       email: 'george1@westborn.com.au',
-      coursesEnroled: [
-        { title: 'An Indigenous Talk', status: 'Enrol?' },
-        { title: 'An Indigenous Walk', status: 'Waitlist?' },
-        { title: 'Book Club Bermagui', status: 'Enrol?' },
-        { title: 'Fun French for Beginners and Forgetters', status: 'Waitlist?' },
-      ],
+      coursesEnroled: [{ title: 'A Conversation', status: 'Enrol?' }],
     },
     ss
   )

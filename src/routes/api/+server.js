@@ -1,7 +1,7 @@
 import { json as json$1 } from '@sveltejs/kit'
 
 const googleWebAppUrl =
-  'https://script.google.com/macros/s/AKfycbyv5w_lYQUTGG1Kh_TfXpwgiOedmKGvc74nIJYCJqdwZlbAP0BglOnruwOkykqqlmshbw/exec'
+  'https://script.google.com/macros/s/AKfycbz-XGsvHwrqXyjQ_IRGt-Z64N7vhnEA-vgq3QTUn_hG9mteLi05C46CCbeTfm_4zhf8ww/exec'
 //
 // send a post request to the google sheet backend web app
 // use the search param to determine which function to call on the backend
