@@ -1,9 +1,6 @@
-this.CONFIG = {
-  TERM_SHEET: '1ZUeS8XrATmgh_tF896Xrk0aEbXnqsrYuyp9jq_8AYS8',
-}
-
 function testadd() {
-  const ss = SpreadsheetApp.openById(CONFIG.TERM_SHEET)
+  const ssId = wbLib.getCONFIG('AA_CourseCONFIG.JSON').COURSE_SHEET_ID
+  const ss = SpreadsheetApp.openById(ssId)
   const res = addEnrolments(
     {
       name: 'George1 Stone',
@@ -16,7 +13,8 @@ function testadd() {
 }
 
 function testget() {
-  const ss = SpreadsheetApp.openById(CONFIG.TERM_SHEET)
+  const ssId = wbLib.getCONFIG('AA_CourseCONFIG.JSON').COURSE_SHEET_ID
+  const ss = SpreadsheetApp.openById(ssId)
   const res = getCourseDetails('', ss)
   console.log(res.getContent())
 }
@@ -34,7 +32,8 @@ function doPost(e) {
   }
 
   try {
-    var ss = SpreadsheetApp.openById(CONFIG.TERM_SHEET)
+    const ssId = wbLib.getCONFIG('AA_CourseCONFIG.JSON').COURSE_SHEET_ID
+    const ss = SpreadsheetApp.openById(ssId)
     var request = JSON.parse(e.postData.contents)
     const requestType = e.parameter.requestType
     var res
