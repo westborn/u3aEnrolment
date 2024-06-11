@@ -1,5 +1,5 @@
-import { SECRET_WEBAPP_API_URL } from '$env/static/private'
-const googleWebAppUrl = SECRET_WEBAPP_API_URL
+import { PUBLIC_WEBAPP_API_URL } from '$env/static/private'
+const googleWebAppUrl = PUBLIC_WEBAPP_API_URL
 
 export async function load({ fetch }) {
   // console.log('Sending')

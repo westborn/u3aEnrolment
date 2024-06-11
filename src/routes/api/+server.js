@@ -1,6 +1,6 @@
-import { SECRET_WEBAPP_API_URL } from '$env/static/private'
+import { PUBLIC_WEBAPP_API_URL } from '$env/static/private'
 import { json as json$1 } from '@sveltejs/kit'
-const googleWebAppUrl = SECRET_WEBAPP_API_URL
+const googleWebAppUrl = PUBLIC_WEBAPP_API_URL
 //
 // send a post request to the google sheet backend web app
 // use the search param to determine which function to call on the backend
