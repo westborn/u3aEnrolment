@@ -1,4 +1,4 @@
-import { PUBLIC_WEBAPP_API_URL } from '$env/static/private'
+import { PUBLIC_WEBAPP_API_URL } from '$env/static/public'
 import { json as json$1 } from '@sveltejs/kit'
 const googleWebAppUrl = PUBLIC_WEBAPP_API_URL
 //
