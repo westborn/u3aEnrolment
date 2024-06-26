@@ -1,4 +1,4 @@
-import { PUBLIC_WEBAPP_API_URL } from '$env/static/private'
+import { PUBLIC_WEBAPP_API_URL } from '$env/static/public'
 const googleWebAppUrl = PUBLIC_WEBAPP_API_URL
 
 export async function load({ fetch }) {
