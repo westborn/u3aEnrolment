@@ -37,6 +37,7 @@
         status: enrolment.courseStatus,
         dates: enrolment.dates,
         time: enrolment.time,
+        cost: enrolment.courseCost,
       }
     })
     // send request to server
