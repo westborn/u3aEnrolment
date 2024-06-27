@@ -37,9 +37,11 @@
         status: enrolment.courseStatus,
         dates: enrolment.dates,
         time: enrolment.time,
-        cost: enrolment.courseCost,
+        courseCost: enrolment.courseCost,
       }
     })
+    //TODO - add payment things here
+
     // send request to server
     const res = await fetch('/api?requestType=addEnrolments', {
       method: 'POST',
@@ -91,7 +93,6 @@
         bind:value={$currentUserEmail}
         type="text"
         class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
-        placeholder="someone@gmail.com"
       />
       <label
         for="email"
@@ -107,7 +108,6 @@
         bind:value={$currentUserName}
         type="text"
         class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
-        placeholder="someone@gmail.com"
       />
       <label
         for="name"

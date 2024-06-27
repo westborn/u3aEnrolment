@@ -8,7 +8,8 @@ const googleWebAppUrl = PUBLIC_WEBAPP_API_URL
 
 export async function POST({ request }) {
   const data = await request.json()
-
+  console.log('routes/api', data)
+  return { status: 'OK' }
   var requestType
   try {
     const url = new URL(request.url)

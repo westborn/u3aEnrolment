@@ -1,8 +1,8 @@
 <script>
   import '../app.css'
   import { currentUserEmail, currentUserName, coursesEnroled } from '$lib/stores.js'
-  currentUserName.set('Unknown')
-  currentUserEmail.set('Unknown')
+  currentUserName.set('')
+  currentUserEmail.set('')
   coursesEnroled.set([])
 
   import { onMount } from 'svelte'
@@ -28,17 +28,12 @@
 </script>
 
 <svelte:head>
-  <title>U3A Bermagui - Course Enrolment</title>
+  <title>Course Enrolment</title>
 </svelte:head>
 
 <Nav />
 <div class="mt-8">
-  <p
-    class="ml-28 -mt-8 mb-4
-	text-xl font-bold text-gray-700"
-  >
-    Course Enrolment
-  </p>
+  <p class="ml-28 -mt-8 mb-4text-xl font-bold text-gray-700">Course Enrolment</p>
 </div>
 <div class="mx-auto my-8 flex max-w-2xl flex-col justify-around">
   <slot />
