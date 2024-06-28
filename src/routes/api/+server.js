@@ -9,7 +9,6 @@ const googleWebAppUrl = PUBLIC_WEBAPP_API_URL
 export async function POST({ request }) {
   const data = await request.json()
   console.log('routes/api', data)
-  return { status: 'OK' }
   var requestType
   try {
     const url = new URL(request.url)
@@ -19,8 +18,8 @@ export async function POST({ request }) {
   }
 
   const fetchUrl = `${googleWebAppUrl}?requestType=${requestType}`
-  // console.log(fetchUrl)
-  // console.log(JSON.stringify(data, null, 2))
+  console.log(fetchUrl)
+  console.log(JSON.stringify(data, null, 2))
   const response = await fetch(fetchUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'text/plain' },

@@ -5,6 +5,9 @@
   export let course
   $: ({ courseStatus, title, summary, description, dates, time, location, courseCost } = course)
 
+  $: coursePaymentRequired = courseCost > 0 && courseStatus === 'Enrol?' ? true : false
+  $: coursePaymentText = coursePaymentRequired ? ' (Payable on enrolment via Credit Card)' : ''
+
   function onChange({ target }) {
     const { value, checked } = target
     if (checked) {
@@ -38,11 +41,11 @@
       </Accordion>
       <p class="text-sm">{dates} {time}</p>
       <p class="text-sm">{location}</p>
-      {#if courseCost}
+      {#if coursePaymentRequired}
         <p class="text-sm">
           <!-- Cost: ${courseCost * ((dates.match(/,/g) || []).length + 1)} -->
           Cost: ${courseCost}
-          <span class="text-red-700">&nbsp (Payable on enrolment via Credit Card)</span>
+          <span class="text-red-700">{coursePaymentText}</span>
         </p>
       {/if}
     </div>

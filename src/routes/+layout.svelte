@@ -1,9 +1,10 @@
 <script>
   import '../app.css'
-  import { currentUserEmail, currentUserName, coursesEnroled } from '$lib/stores.js'
+  import { currentUserEmail, currentUserName, coursesEnroled, courseDetails } from '$lib/stores.js'
   currentUserName.set('')
   currentUserEmail.set('')
   coursesEnroled.set([])
+  courseDetails.set([])
 
   import { onMount } from 'svelte'
   import { dev } from '$app/environment'

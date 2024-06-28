@@ -1,16 +1,37 @@
 <script>
-  import { currentUserEmail, currentUserName, coursesEnroled } from '$lib/stores.js'
+  import { goto } from '$app/navigation'
+
+  import { currentUserEmail, currentUserName, coursesEnroled, courseDetails } from '$lib/stores.js'
+  import { validateEmail } from '$lib/utilities.js'
   import CourseCard from '../lib/CourseCard.svelte'
   import CompletedEnrolment from '../lib/CompletedEnrolment.svelte'
 
   export let data
-  let courseDetails = data?.result === 'ok' ? data.data.data : {}
-
-  let userEnrolments = []
+  if (data?.result === 'ok') {
+    courseDetails.set(data.data.data)
+  }
 
   let fetchingData = false
   let errorMessage = ''
   let enrolmentNotification = false
+
+  $: userEnrolments = $coursesEnroled.map((courseName) => {
+    const enrolment = $courseDetails.find((el) => el.title === courseName)
+    return {
+      title: courseName,
+      summary: enrolment.summary,
+      status: enrolment.courseStatus,
+      dates: enrolment.dates,
+      time: enrolment.time,
+      courseCost: enrolment.courseCost,
+    }
+  })
+
+  $: totalCOst = userEnrolments.reduce((acc, course) => {
+    return course.status === 'Enrol?' ? acc + Number(course.courseCost) : acc
+  }, 0)
+
+  $: displayCostButton = totalCOst == 0 ? 'Enrol Me!' : `Enrol Me! (Total Cost: $${totalCOst.toString()})`
 
   async function handleEnrol() {
     // console.log('Enroling')
@@ -29,20 +50,24 @@
     }
 
     // make an object with course and status
-    userEnrolments = $coursesEnroled.map((courseName) => {
-      const enrolment = courseDetails.find((el) => el.title === courseName)
-      return {
-        title: courseName,
-        summary: enrolment.summary,
-        status: enrolment.courseStatus,
-        dates: enrolment.dates,
-        time: enrolment.time,
-        courseCost: enrolment.courseCost,
-      }
-    })
+    // userEnrolments = $coursesEnroled.map((courseName) => {
+    //   const enrolment = $courseDetails.find((el) => el.title === courseName)
+    //   return {
+    //     title: courseName,
+    //     summary: enrolment.summary,
+    //     status: enrolment.courseStatus,
+    //     dates: enrolment.dates,
+    //     time: enrolment.time,
+    //     courseCost: enrolment.courseCost,
+    //   }
+    // })
     //TODO - add payment things here
-
+    if (totalCOst > 0) {
+      goto('/payment/')
+      return
+    }
     // send request to server
+    console.log('/ addEnrolments')
     const res = await fetch('/api?requestType=addEnrolments', {
       method: 'POST',
       body: JSON.stringify({
@@ -60,13 +85,6 @@
       return
     }
     enrolmentNotification = true
-  }
-
-  function validateEmail(mail) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
-      return true
-    }
-    return false
   }
 
   let btnClasses =
@@ -119,7 +137,7 @@
 
   <section class="container mx-auto max-w-prose px-3">
     <div class="py-4">
-      {#each courseDetails as course}
+      {#each $courseDetails as course}
         <CourseCard {course} />
       {/each}
     </div>
@@ -131,7 +149,9 @@
     {/if}
     {#if !fetchingData}
       <div class="mt-6 flex justify-between">
-        <button type="button" on:click={() => handleEnrol()} class={btnClasses}>Enrol Me! </button>
+        <button type="button" on:click={() => handleEnrol()} class={btnClasses}>
+          {displayCostButton}
+        </button>
       </div>
     {/if}
     {#if fetchingData}
@@ -151,3 +171,9 @@
 {/if}
 
 <!-- <pre>{JSON.stringify($coursesEnroled, null, 2)}</pre> -->
+<!-- <pre>{JSON.stringify(totalCOst, null, 2)}</pre> -->
+<!-- <pre>{JSON.stringify($courseDetails, null, 2)}</pre> -->
+
+<!-- <p>xx={JSON.stringify($coursesEnroled, null, 2)}</p>
+<p>xx={JSON.stringify(userEnrolments, null, 2)}</p>
+<p>xx={totalCOst}</p> -->
