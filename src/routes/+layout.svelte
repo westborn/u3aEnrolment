@@ -33,9 +33,9 @@
 </svelte:head>
 
 <Nav />
-<div class="mt-8">
-  <p class="ml-28 -mt-8 mb-4text-xl font-bold text-gray-700">Course Enrolment</p>
-</div>
 <div class="mx-auto my-8 flex max-w-2xl flex-col justify-around">
-  <slot />
+  <section class="container mx-auto max-w-prose px-3">
+    <h3 class="text-xl font-bold text-accent">Course Enrolment</h3>
+    <slot />
+  </section>
 </div>

@@ -1,14 +1,9 @@
 <script>
-  import { currentUserEmail, currentUserName } from '$lib/stores.js'
-
   export let requestedCourses
 
   $: enroledCourses = requestedCourses.filter((course) => course.status === 'Enrol?')
   $: waitlistedCourses = requestedCourses.filter((course) => course.status === 'Waitlist?')
 </script>
-
-<p class="text-xl mt-6">{$currentUserName}</p>
-<p class="text-base mt-1">{$currentUserEmail}</p>
 
 {#if enroledCourses.length > 0}
   <div class="flex flex-col mt-6">
@@ -37,12 +32,3 @@
     </ul>
   </div>
 {/if}
-
-<div class="mt-12">
-  <a
-    href="https://u3abermagui.com.au/current-program/"
-    class="text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg"
-    >Back to the Program</a
-  >
-  <p class="mt-12 font-bold text-accent">An email has been sent to you containing details of this enrolment.</p>
-</div>

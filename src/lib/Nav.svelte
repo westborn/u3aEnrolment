@@ -13,10 +13,6 @@
       href: '/news',
     },
     {
-      text: 'Program',
-      href: '/program',
-    },
-    {
       text: 'Presenters',
       href: '/presenters',
     },
@@ -61,8 +57,8 @@
   </div>
 
   <!-- Desktop Menu -->
-  <div class="flex justify-between">
-    <a class="px-16 py-2" href="https://U3ABermagui.com.au/home">
+  <div class="flex justify-between mt-[10px] ml-[60px]">
+    <a class="" href="https://U3ABermagui.com.au">
       <img
         alt="Bermagui U3A"
         src="https://u3abermagui.com.au/wp-content/uploads/2018/11/U3A_Bermagui_Logo-154x70.png"
@@ -73,7 +69,7 @@
       type="button"
       aria-label="Mobile Menu"
       on:click={() => (hamburgerMenuOpen = !hamburgerMenuOpen)}
-      class="ml-3 inline-flex items-center rounded-lg p-2 text-sm text-gray-100 hover:bg-gray-300 hover:text-primary focus:outline-none focus:ring-0 focus:ring-gray-200 lg:hidden"
+      class="ml-3 inline-flex items-center rounded-lg p-2 text-sm text-gray-400 hover:bg-gray-200 hover:text-primary focus:outline-none focus:ring-0 focus:ring-gray-200 lg:hidden"
     >
       <svg
         class:hidden={hamburgerMenuOpen}

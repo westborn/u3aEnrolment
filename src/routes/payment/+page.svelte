@@ -220,44 +220,10 @@
     }
   }
 
-  // 	{
-  //   payment: {
-  //     id: 'rzrywF0mJGLH6FVv0rGe6ghfDHWZY',
-  //     createdAt: '2023-11-06T03:46:32.187Z',
-  //     updatedAt: '2023-11-06T03:46:32.391Z',
-  //     amountMoney: { amount: 100n, currency: 'AUD' },
-  //     totalMoney: { amount: 100n, currency: 'AUD' },
-  //     approvedMoney: { amount: 100n, currency: 'AUD' },
-  //     status: 'COMPLETED',
-  //     delayDuration: 'PT168H',
-  //     delayAction: 'CANCEL',
-  //     delayedUntil: '2023-11-13T03:46:32.187Z',
-  //     sourceType: 'CARD',
-  //     cardDetails: {
-  //       status: 'CAPTURED',
-  //       card: [Object],
-  //       entryMethod: 'KEYED',
-  //       cvvStatus: 'CVV_ACCEPTED',
-  //       avsStatus: 'AVS_REJECTED',
-  //       statementDescription: 'SQ *TEST HEAD OFFICE',
-  //       cardPaymentTimeline: [Object]
-  //     },
-  //     locationId: 'LWSA7ZHB2BHV3',
-  //     orderId: '2BgfV606aYvXlqc2KyEdXhgcCg4F',
-  //     receiptNumber: 'rzry',
-  //     receiptUrl: 'https://squareupsandbox.com/receipt/preview/rzrywF0mJGLH6FVv0rGe6ghfDHWZY',
-  //     applicationDetails: {
-  //       squareProduct: 'ECOMMERCE_API',
-  //       applicationId: 'sandbox-sq0idb-cgiuJtJuEtUWTsU1f8j-eA'
-  //     },
-  //     versionToken: '9oVj8WymLtKNjFrVyRducOkPvOW98wIlUrOQCdZTUZX6o'
-  //   }
-  // }
-
   $: apiThings = apiResponse //debugging
 </script>
 
-<section class="container mx-auto max-w-prose px-3">
+<div>
   {#if !$currentUserName}
     <h1 class="mb-6 text-xl font-bold">Please enrol first</h1>
     <a
@@ -265,9 +231,6 @@
       href="https://u3abermagui.com.au/current-program/">Back to the Program</a
     >
   {:else}
-    <h1>
-      Enrolment Payment - {$currentUserEmail}
-    </h1>
     <div class="mt-4 text-base">
       <div class="mt-6 grid grid-cols-[6ch_1fr] items-center">
         <p class="text-sm">Name:</p>
@@ -334,7 +297,7 @@
       </section>
     {/if}
   {/if}
-</section>
+</div>
 
 <!-- <pre class="whitespace-pre-wrap">
 	{apiResponse?.lastStatus?.response?.payment?.receiptUrl}<br />
