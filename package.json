@@ -8,22 +8,23 @@
     "push": "clasp push"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^2.0.0",
-    "@sveltejs/kit": "^1.20.4",
-    "@tailwindcss/forms": "^0.5.6",
-    "@types/google-apps-script": "^1.0.76",
-    "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.31",
-    "postcss-load-config": "^4.0.1",
-    "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.6",
-    "svelte": "^4.0.5",
-    "svelte-preprocess": "^5.0.4",
-    "tailwindcss": "^3.3.5",
-    "vite": "^4.4.2"
+    "@sveltejs/adapter-auto": "^3.2.2",
+    "@sveltejs/kit": "^2.5.18",
+    "@tailwindcss/forms": "^0.5.7",
+    "@types/google-apps-script": "^1.0.83",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.39",
+    "postcss-load-config": "^6.0.1",
+    "prettier": "^3.3.2",
+    "prettier-plugin-tailwindcss": "^0.6.5",
+    "svelte": "^4.2.18",
+    "svelte-preprocess": "^6.0.1",
+    "tailwindcss": "^3.4.4",
+    "vite": "^5.3.2"
   },
   "type": "module",
   "dependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
     "square": "^37.1.0",
     "uuid": "^10.0.0"
   }
