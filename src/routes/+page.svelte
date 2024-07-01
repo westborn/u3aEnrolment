@@ -3,13 +3,15 @@
 
   import { currentUserEmail, currentUserName, coursesEnroled, courseDetails } from '$lib/stores.js'
   import { validateEmail } from '$lib/utilities.js'
-  import CourseCard from '../lib/CourseCard.svelte'
-  import CompletedEnrolment from '../lib/CompletedEnrolment.svelte'
+  import EnrolForm from '$lib/EnrolForm.svelte'
+  import CompletedEnrolment from '$lib/CompletedEnrolment.svelte'
 
   export let data
   if (data?.result === 'ok') {
-    courseDetails.set(data.data.data)
+    $courseDetails = data.data.data
   }
+
+  export let form
 
   let fetchingData = false
   let errorMessage = ''
@@ -101,61 +103,8 @@
   </p>
   <p class="mt-2">IMPORTANT – you may need to scroll to the bottom of the form to complete the enrolment.</p>
 
-  <div class="relative mt-6 w-full">
-    <input
-      id="email"
-      name="email"
-      bind:value={$currentUserEmail}
-      type="text"
-      class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
-    />
-    <label
-      for="email"
-      class="absolute left-2 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-gray-600"
-      >Email address</label
-    >
-  </div>
-
-  <div class="relative mt-6 w-full">
-    <input
-      id="name"
-      name="name"
-      bind:value={$currentUserName}
-      type="text"
-      class="peer h-10 w-full rounded-md border-gray-300 placeholder-transparent focus:border-primary-50 focus:outline-none"
-    />
-    <label
-      for="name"
-      class="absolute left-2 -top-5 text-sm text-gray-600 transition-all peer-placeholder-shown:top-2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-focus:-top-5 peer-focus:text-sm peer-focus:text-gray-600"
-      >Your Name</label
-    >
-  </div>
-
-  <div class="py-4">
-    {#each $courseDetails as course}
-      <CourseCard {course} />
-    {/each}
-  </div>
-
-  {#if errorMessage}
-    <p class="m-2 text-red-500">{errorMessage}</p>
-  {/if}
-  {#if !fetchingData}
-    <div class="mt-6 flex justify-between">
-      <button type="button" on:click={() => handleEnrol()} class={btnClasses}>
-        {displayCostButton}
-      </button>
-    </div>
-  {/if}
-  {#if fetchingData}
-    <div
-      style="border-top-color:transparent"
-      class="m-6 h-16 w-16 animate-spin rounded-full border-8 border-solid border-accent"
-    />
-  {/if}
-{/if}
-
-{#if enrolmentNotification}
+  <EnrolForm {form} />
+{:else}
   <p class="text-xl mt-6">{$currentUserName}</p>
   <p class="text-base mt-1">{$currentUserEmail}</p>
 
@@ -171,7 +120,7 @@
   </div>
 {/if}
 
-<!-- <pre>{JSON.stringify($coursesEnroled, null, 2)}</pre> -->
+<pre>{JSON.stringify($coursesEnroled, null, 2)}</pre>
 <!-- <pre>{JSON.stringify(totalCOst, null, 2)}</pre> -->
 <!-- <pre>{JSON.stringify($courseDetails, null, 2)}</pre> -->
 

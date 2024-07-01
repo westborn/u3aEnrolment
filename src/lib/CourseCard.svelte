@@ -13,8 +13,13 @@
     if (checked) {
       $coursesEnroled = [...$coursesEnroled, value]
     } else {
-      $coursesEnroled = $coursesEnroled.filter((item) => item !== value)
+      const index = $coursesEnroled.indexOf(value)
+      if (index > -1) {
+        $coursesEnroled.splice(index, 1)
+      }
     }
+    //TODO SVELTE stupidity
+    $coursesEnroled = $coursesEnroled
   }
 </script>
 
@@ -43,7 +48,6 @@
       <p class="text-sm">{location}</p>
       {#if coursePaymentRequired}
         <p class="text-sm">
-          <!-- Cost: ${courseCost * ((dates.match(/,/g) || []).length + 1)} -->
           Cost: ${courseCost}
           <span class="text-red-700">{coursePaymentText}</span>
         </p>
