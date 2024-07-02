@@ -10,6 +10,7 @@
 
   //hack to allow component to have checkbox state
   export let group
+  export let fetchingData
   let checked = ''
   $: updateChekbox(group)
   $: updateGroup(checked)
@@ -39,6 +40,7 @@
   <div class="flex flex-row">
     <div class="flex flex-col mr-6 mt-2">
       <input
+        disabled={fetchingData}
         class="h-7 w-7 rounded bg-secondary-100 border-secondary-500 text-secondary-500 focus:ring-secondary-200"
         type="checkbox"
         bind:checked

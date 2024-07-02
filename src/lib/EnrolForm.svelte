@@ -13,12 +13,25 @@
   })
 
   export let form
-  let selected = []
+  let checkedGroup = []
+  let fetchingData = false
 </script>
 
-<form action="?/enrol" method="POST" use:enhance>
+<form
+  action="?/enrol"
+  method="POST"
+  use:enhance={() => {
+    fetchingData = true
+    return ({ update }) => {
+      update().finally(() => {
+        fetchingData = false
+      })
+    }
+  }}
+>
   <div class="relative mt-6 w-full">
     <input
+      disabled={fetchingData}
       id="email"
       name="email"
       bind:value={$currentUserEmail}
@@ -34,6 +47,7 @@
 
   <div class="relative mt-6 w-full">
     <input
+      disabled={fetchingData}
       id="name"
       name="name"
       bind:value={$currentUserName}
@@ -49,7 +63,7 @@
 
   <div class="py-4">
     {#each $courseDetails as course}
-      <CourseCard {course} bind:group={selected} />
+      <CourseCard {course} bind:group={checkedGroup} {fetchingData} />
     {/each}
   </div>
   <input
@@ -62,23 +76,17 @@
   />
   {#if form?.error}<p class="m-2 text-red-500">{form.message}</p>{/if}
 
-  <button
-    type="submit"
-    class="mt-6 text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg"
-  >
-    Enrol Me!
-  </button>
-  <!-- {#if !fetchingData}
-    <div class="mt-6 flex justify-between">
-      <button type="button" on:click={() => handleEnrol()} class={btnClasses}>
-        {displayCostButton}
-      </button>
-    </div>
-  {/if}
   {#if fetchingData}
     <div
       style="border-top-color:transparent"
       class="m-6 h-16 w-16 animate-spin rounded-full border-8 border-solid border-accent"
     />
-  {/if} -->
+  {/if}
+  <button
+    disabled={fetchingData}
+    type="submit"
+    class="mt-6 text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg"
+  >
+    Enrol Me!
+  </button>
 </form>

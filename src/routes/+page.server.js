@@ -2,15 +2,20 @@ import { PUBLIC_WEBAPP_API_URL } from '$env/static/public'
 import { fail, redirect } from '@sveltejs/kit'
 import { validateEmail } from '$lib/utilities.js'
 
-export async function load({ fetch }) {
-  // console.log('Sending')
-  const response = await fetch(`${PUBLIC_WEBAPP_API_URL}?requestType=getCourseDetail`, {
+const sendToSheetsApp = async ({ data, requestType }) => {
+  const fetchUrl = `${PUBLIC_WEBAPP_API_URL}?requestType=${requestType}`
+  const response = await fetch(fetchUrl, {
     method: 'POST',
-    body: JSON.stringify({ action: 'get_data' }),
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data),
   })
-  const courseDetailResponse = await response.json()
-  // console.log(`Load response: ${JSON.stringify(courseDetailResponse.result, null, 2)}`)
-  return courseDetailResponse
+  const res = await response.json()
+  return res
+}
+
+export async function load() {
+  const res = await sendToSheetsApp({ data: { action: 'get_data' }, requestType: 'getCourseDetail' })
+  return res
 }
 
 export const actions = {
@@ -19,7 +24,6 @@ export const actions = {
     const name = formData.get('name')
     const email = formData.get('email')
     const coursesEnroled = JSON.parse(formData.get('coursesEnroled'))
-    console.log('coursesEnroled', coursesEnroled)
     if (!validateEmail(email)) {
       return fail(400, {
         error: true,
@@ -33,21 +37,13 @@ export const actions = {
       })
     }
 
-    const data = { name, email, coursesEnroled }
-    const fetchUrl = `${PUBLIC_WEBAPP_API_URL}?requestType=addEnrolments`
-    const response = await fetch(fetchUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(data),
-    })
-    const res = await response.json()
+    const res = await sendToSheetsApp({ data: { name, email, coursesEnroled }, requestType: 'addEnrolments' })
     if (res.result === 'error') {
       return fail(400, {
         error: true,
         message: res.data,
       })
     }
-    console.log('Enrol response', res)
-    redirect(307, `/enrolment-success?data=${JSON.stringify(res.data)}`)
+    redirect(307, `/enrolment-success`)
   },
 }
