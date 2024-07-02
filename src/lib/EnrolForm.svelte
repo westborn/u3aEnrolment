@@ -81,12 +81,13 @@
       style="border-top-color:transparent"
       class="m-6 h-16 w-16 animate-spin rounded-full border-8 border-solid border-accent"
     />
+  {:else}
+    <button
+      disabled={fetchingData}
+      type="submit"
+      class="mt-6 text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg"
+    >
+      Enrol Me!
+    </button>
   {/if}
-  <button
-    disabled={fetchingData}
-    type="submit"
-    class="mt-6 text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg"
-  >
-    Enrol Me!
-  </button>
 </form>

@@ -15,7 +15,6 @@
 
   let fetchingData = false
   let errorMessage = ''
-  let enrolmentNotification = false
 
   $: userEnrolments = $coursesEnroled.map((courseName) => {
     const enrolment = $courseDetails.find((el) => el.title === courseName)
@@ -86,41 +85,14 @@
       errorMessage = response.data
       return
     }
-    enrolmentNotification = true
   }
-
-  let btnClasses =
-    'text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg'
 </script>
 
-{#if !enrolmentNotification}
-  <p class="mt-2">Welcome!</p>
-  <p>Please review the courses on offer for this term on the Current Program page.</p>
-  <p class="mt-2">
-    When you have decided which courses you want to enrol in, fill in your details in the form below, select the courses
-    you are interested in and click the "Enrol Me!" button. Please only enrol ONCE for a course. If you enrol more than
-    once then other members may not be able to join that class.
-  </p>
-  <p class="mt-2">IMPORTANT – you may need to scroll to the bottom of the form to complete the enrolment.</p>
-
+<div class="mt-10">
   <EnrolForm {form} />
-{:else}
-  <p class="text-xl mt-6">{$currentUserName}</p>
-  <p class="text-base mt-1">{$currentUserEmail}</p>
+</div>
 
-  <CompletedEnrolment requestedCourses={userEnrolments} />
-
-  <div class="mt-12">
-    <a
-      href="https://u3abermagui.com.au/current-program/"
-      class="text-sm rounded-md bg-secondary-300 px-8 py-4 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg"
-      >Back to the Program</a
-    >
-    <p class="mt-12 font-bold text-accent">An email has been sent to you containing details of this enrolment.</p>
-  </div>
-{/if}
-
-<pre>{JSON.stringify($coursesEnroled, null, 2)}</pre>
+<!-- <pre>{JSON.stringify($coursesEnroled, null, 2)}</pre> -->
 <!-- <pre>{JSON.stringify(totalCOst, null, 2)}</pre> -->
 <!-- <pre>{JSON.stringify($courseDetails, null, 2)}</pre> -->
 
