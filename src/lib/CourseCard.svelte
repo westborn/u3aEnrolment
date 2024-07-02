@@ -8,18 +8,30 @@
   $: coursePaymentRequired = courseCost > 0 && courseStatus === 'Enrol?' ? true : false
   $: coursePaymentText = coursePaymentRequired ? ' (Payable on enrolment via Credit Card)' : ''
 
-  function onChange({ target }) {
-    const { value, checked } = target
+  //hack to allow component to have checkbox state
+  export let group
+  let checked = ''
+  $: updateChekbox(group)
+  $: updateGroup(checked)
+
+  function updateChekbox(group) {
+    checked = group.indexOf(title) >= 0
+  }
+
+  function updateGroup(checked) {
+    const index = group.indexOf(title)
     if (checked) {
-      $coursesEnroled = [...$coursesEnroled, value]
+      if (index < 0) {
+        group.push(title)
+        group = group
+      }
     } else {
-      const index = $coursesEnroled.indexOf(value)
-      if (index > -1) {
-        $coursesEnroled.splice(index, 1)
+      if (index >= 0) {
+        group.splice(index, 1)
+        group = group
       }
     }
-    //TODO SVELTE stupidity
-    $coursesEnroled = $coursesEnroled
+    $coursesEnroled = group
   }
 </script>
 
@@ -29,8 +41,7 @@
       <input
         class="h-7 w-7 rounded bg-secondary-100 border-secondary-500 text-secondary-500 focus:ring-secondary-200"
         type="checkbox"
-        checked={$coursesEnroled.includes(title)}
-        on:change={onChange}
+        bind:checked
         value={title}
       />
       <p class="text-sm w-12">{courseStatus}</p>

@@ -13,6 +13,7 @@
   })
 
   export let form
+  let selected = []
 </script>
 
 <form action="?/enrol" method="POST" use:enhance>
@@ -47,9 +48,8 @@
   </div>
 
   <div class="py-4">
-    {#each $courseDetails as course (course.title)}
-      <!-- <CourseCard {course} bind:bindGroup /> -->
-      <CourseCard {course} />
+    {#each $courseDetails as course}
+      <CourseCard {course} bind:group={selected} />
     {/each}
   </div>
   <input
