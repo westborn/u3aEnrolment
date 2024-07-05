@@ -15,7 +15,3 @@
   <!-- there is no return from here - we either redirect to '/enrolment-success' or make a pyment via '/payment' -->
   <EnrolForm {form} />
 </div>
-
-<!-- <pre>{JSON.stringify($coursesEnroled, null, 2)}</pre> -->
-<!-- <pre>{JSON.stringify(totalCOst, null, 2)}</pre> -->
-<!-- <pre>{JSON.stringify($courseDetails, null, 2)}</pre> -->

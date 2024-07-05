@@ -13,11 +13,11 @@
     }
   })
 
-  $: totalCOst = userEnrolments.reduce((acc, course) => {
+  $: costOfEnrolment = userEnrolments.reduce((acc, course) => {
     return course.status === 'Enrol?' ? acc + Number(course.courseCost) : acc
   }, 0)
 
-  $: displayCostButton = totalCOst == 0 ? 'Enrol Me!' : `Enrol Me! (Total Cost: $${totalCOst.toString()})`
+  $: displayCostButton = costOfEnrolment == 0 ? 'Enrol Me!' : `Enrol Me! (Total Cost: $${costOfEnrolment.toString()})`
 
   export let form
   let checkedGroup = []
@@ -74,7 +74,7 @@
     {/each}
   </div>
   <input hidden id="coursesEnroled" name="coursesEnroled" type="text" value={JSON.stringify(userEnrolments)} />
-  <input hidden id="totalCOst" name="totalCOst" type="text" value={totalCOst} />
+  <input hidden id="costOfEnrolment" name="costOfEnrolment" type="text" value={costOfEnrolment} />
   {#if form?.error}<p class="m-2 text-red-500">{form.message}</p>{/if}
 
   {#if fetchingData}

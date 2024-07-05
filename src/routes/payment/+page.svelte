@@ -252,13 +252,3 @@
     {/if}
   {/if}
 </div>
-
-<!-- <pre class="whitespace-pre-wrap">
-	{apiResponse?.lastStatus?.response?.payment?.receiptUrl}<br />
-	<br />
-	{JSON.stringify(apiThings, null, 4)}
-</pre> -->
-
-<!-- <p>xx={JSON.stringify($coursesEnroled, null, 2)}</p>
-<p>xx={JSON.stringify(userEnrolments, null, 2)}</p>
-<p>xx={costOfEnrolment}</p> -->

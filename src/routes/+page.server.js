@@ -14,7 +14,7 @@ export const actions = {
     const email = formData.get('email')
     const coursesEnroled = JSON.parse(formData.get('coursesEnroled'))
     const paymentReceipt = ''
-    const totalCOst = formData.get('totalCOst')
+    const costOfEnrolment = formData.get('costOfEnrolment')
     if (!validateEmail(email)) {
       return fail(400, {
         error: true,
@@ -28,7 +28,7 @@ export const actions = {
       })
     }
 
-    if (totalCOst === '0') {
+    if (costOfEnrolment === '0') {
       const res = await sendToSheetsApp({
         data: { name, email, coursesEnroled, paymentReceipt },
         requestType: 'addEnrolments',
