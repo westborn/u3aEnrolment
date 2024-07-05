@@ -18,7 +18,7 @@
 </script>
 
 <p class="text-xl mt-6">For: {$currentUserName}</p>
-<p class="text-base mt-1">({$currentUserEmail})</p>
+<p class="mt-1 px-10">{$currentUserEmail}</p>
 
 {#if enroledCourses.length > 0}
   <div class="flex flex-col mt-6">

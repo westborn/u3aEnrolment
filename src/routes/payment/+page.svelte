@@ -1,28 +1,23 @@
 <script>
-  /** @type {import('./$types').PageData} */
+  import { PUBLIC_SQUARE_APP_ID, PUBLIC_SQUARE_LOCATION_ID } from '$env/static/public'
 
   import { onMount } from 'svelte'
   import { goto } from '$app/navigation'
 
   import { currentUserEmail, currentUserName, coursesEnroled, courseDetails } from '$lib/stores.js'
   import { handleError, handleUnexpectedError, processResponse, apiResponse } from '$lib/utilities.js'
-  import CompletedEnrolment from '$lib/CompletedEnrolment.svelte'
+  import { sendToSheetsApp } from '$lib/sheetsAPI.js'
 
   apiResponse.lastStatus = {}
-
-  import { PUBLIC_SQUARE_APP_ID, PUBLIC_SQUARE_LOCATION_ID } from '$env/static/public'
-  const appId = PUBLIC_SQUARE_APP_ID
-  const locationId = PUBLIC_SQUARE_LOCATION_ID
 
   const validStates = {
     COMMENCING: 'COMMENCE',
     PAYING: 'PAY',
-    COMPLETING: 'COMPLETE',
-    FINISHED: 'FINISH',
     PAYMENTERROR: 'PAYMENTERROR',
+    ERROR: 'ERROR',
   }
 
-  let currentState = validStates.COMMENCING
+  $: currentState = validStates.COMMENCING
   let errorMessage = ''
   let fetchingData = false
 
@@ -64,8 +59,8 @@
         throw new Error('Square.js failed to load properly')
       }
       errorMessage = ''
-      const payments = window.Square.payments(appId, locationId)
-      console.log('adding payment container')
+      const payments = window.Square.payments(PUBLIC_SQUARE_APP_ID, PUBLIC_SQUARE_LOCATION_ID)
+      // console.log('adding payment container')
 
       // INIT CARD
       try {
@@ -96,33 +91,10 @@
     }
   }
 
-  async function sendCompleteToServer() {
-    console.log('/payment addEnrolments')
-    const wasFetching = fetchingData
-    fetchingData = true
-
-    const res = await fetch('/api?requestType=addEnrolments', {
-      method: 'POST',
-      body: JSON.stringify({
-        name: $currentUserName,
-        email: $currentUserEmail,
-        coursesEnroled: userEnrolments,
-      }),
-    })
-    const response = await res.json()
-
-    // console.log('response', response)
-    if (response.result === 'error') {
-      handleUnexpectedError(errorMessage)
-      errorMessage = response.data
-    }
-    fetchingData = wasFetching
-    return response
-  }
-
   async function readyToPay() {
-    console.log('readyToPay: here')
+    // console.log('readyToPay: here')
     fetchingData = true
+    currentState = validStates.PAYING
 
     //try to make the CC  payment
     await handlePaymentSubmission()
@@ -136,21 +108,33 @@
     const paymentCompleted = apiResponse?.lastStatus?.response?.payment?.status === 'COMPLETED'
     if (!paymentCompleted) return
     errorMessage = 'Payment completed'
-    currentState = validStates.COMPLETING
     await completeEnrolment(apiResponse.lastStatus.response)
-    currentState = validStates.FINISHED
+    if (errorMessage === '') {
+      goto(`/enrolment-success`)
+      fetchingData = false
+      return
+    }
+    currentState = validStates.ERROR
     fetchingData = false
     return
   }
 
   async function completeEnrolment(squarePaymentResponse) {
-    console.log('completeEnrolment: here')
-    console.log(squarePaymentResponse.payment.receiptUrl)
+    // console.log('completeEnrolment: here')
+    // console.log(squarePaymentResponse.payment.receiptUrl)
     const wasFetching = fetchingData
     fetchingData = true
     errorMessage = 'Recording your enrolment and sending you an email - please be patient'
-    const response = await sendCompleteToServer()
-    console.log('completeEnrolment', JSON.stringify(response, null, 2))
+    const response = await sendToSheetsApp({
+      data: {
+        name: $currentUserName,
+        email: $currentUserEmail,
+        coursesEnroled: userEnrolments,
+        paymentReceipt: apiResponse.lastStatus.response.payment.receiptUrl,
+      },
+      requestType: 'addEnrolments',
+    })
+    // console.log('completeEnrolment', JSON.stringify(response, null, 2))
     if (response.result === 'error') {
       errorMessage = response.data
       handleUnexpectedError(errorMessage)
@@ -162,16 +146,10 @@
     return
   }
 
-  async function finishEnrolment() {
-    console.log('finishEnrolment: here')
-    fetchingData = false
-    goto('https://u3abermagui.com.au/current-program/')
-  }
-
   async function handlePaymentSubmission() {
     const wasFetching = fetchingData
     fetchingData = true
-    console.log('handlePaymentSubmission: here')
+    // console.log('handlePaymentSubmission: here')
     errorMessage = 'Sending payment to Card Processor (Square)'
     let token
     try {
@@ -183,7 +161,6 @@
       return
     }
     apiResponse.lastStatus = {}
-    currentState = validStates.PAYING
     try {
       const paymentResponse = await fetch(`/api/payment`, {
         method: 'POST',
@@ -191,7 +168,7 @@
           'content-type': 'application/json',
         },
         body: JSON.stringify({
-          locationId,
+          locationId: PUBLIC_SQUARE_LOCATION_ID,
           sourceId: token,
           amount: costOfEnrolmentInCents,
           email: $currentUserEmail,
@@ -207,8 +184,7 @@
         currentState = validStates.PAYMENTERROR
         return
       }
-      // Payment response was ok so move on to completing
-      currentState = validStates.COMPLETING
+      // Payment response was ok
       fetchingData = wasFetching
       return
     } catch (err) {
@@ -220,7 +196,7 @@
     }
   }
 
-  $: apiThings = apiResponse //debugging
+  // $: apiThings = apiResponse //debugging
 </script>
 
 <div>
@@ -231,13 +207,9 @@
       href="https://u3abermagui.com.au/current-program/">Back to the Program</a
     >
   {:else}
-    <div class="mt-4 text-base">
-      <div class="mt-6 grid grid-cols-[6ch_1fr] items-center">
-        <p class="text-sm">Name:</p>
-        <p class="">{$currentUserName}</p>
-        <p class="text-sm">Email:</p>
-        <p class="">{$currentUserEmail}</p>
-      </div>
+    <div class="mt-4">
+      <p class="text-xl mt-6">For: {$currentUserName}</p>
+      <p class="mt-1 px-10">{$currentUserEmail}</p>
       <p class="mt-6 text-xl text-primary-400">
         Your enrolment has a total fee of ${costOfEnrolment}
       </p>
@@ -274,27 +246,9 @@
       </div>
     {/if}
 
-    {#if currentState === validStates.FINISHED}
-      <div class="flex flex-col items-center justify-center">
-        <a
-          href={apiResponse?.lastStatus?.response?.payment?.receiptUrl}
-          class="text-blue-600 underline hover:underline hover:text-blue-700"
-          target="_blank"
-          rel="noopener noreferrer">Click here for your receipt</a
-        >
-        <button
-          on:click={() => finishEnrolment()}
-          disabled={fetchingData}
-          class="mt-2 inline-block rounded-lg bg-primary-400 px-7 py-2 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-500 hover:shadow-lg focus:bg-primary-500 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-200 active:shadow-lg"
-          >Enrolment is now Complete</button
-        >
-      </div>
-    {/if}
-    {#if currentState === validStates.COMPLETING}
-      <section class="container mx-auto max-w-prose px-3">
-        <h3 class="text-xl font-bold text-accent">Course Enrolment</h3>
-        <CompletedEnrolment requestedCourses={userEnrolments} />
-      </section>
+    {#if currentState === validStates.ERROR}
+      <h3 class="mt-6 text-xl font-bold text-accent">?SOMETHING WENT WRONG!</h3>
+      <p class="text-accent">Please contact us and let us know - contact@u3abermagui.com</p>
     {/if}
   {/if}
 </div>

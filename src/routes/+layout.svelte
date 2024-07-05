@@ -37,12 +37,12 @@
   <section class="container mx-auto max-w-prose px-3">
     <h3 class="text-xl font-bold text-accent">Course Enrolment</h3>
     <div class="has-tooltip float-right -mt-8">
-      <div class="tooltip rounded-lg shadow-lg p-6 bg-secondary-50 text-grey-600 -mt-10 -ml-72 text-left max-w-lg">
+      <div class="tooltip rounded-lg shadow-lg p-6 bg-slate-200 text-grey-600 -mt-10 -ml-72 text-left max-w-lg">
         <p>Please review the courses on offer for this term on the Current Program page.</p>
         <p>
           When you have decided which courses you want to enrol in, fill in your details in the form below, select the
           courses you are interested in and click the "Enrol Me!" button. Please only enrol ONCE for a course. If you
-          enrol more than once then other members may not be able to join that class.
+          enrol more than once other members may not be able to join that class.
         </p>
         <p class="mt-4">IMPORTANT – you may need to scroll to the bottom of the form to complete the enrolment.</p>
       </div>
