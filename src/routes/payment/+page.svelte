@@ -72,6 +72,8 @@
         // TODO: error handling
         errorMessage = 'Initializing card failed - please try again later'
         console.error(errorMessage)
+        currentState = validStates.ERROR
+        fetchingData = false
         return
       }
       fetchingData = false
@@ -101,6 +103,7 @@
     //if not OK - show any errors and allow retry?
     if (!apiResponse.lastStatus.ok) {
       fetchingData = false
+      currentState = validStates.PAYMENTERROR
       return
     }
 
@@ -158,6 +161,7 @@
       errorMessage = 'Card details not correct - try again'
       console.error(e.message)
       fetchingData = wasFetching
+      currentState = validStates.PAYMENTERROR
       return
     }
     apiResponse.lastStatus = {}
@@ -180,7 +184,7 @@
       console.log(`handlePaymentSubmission-data: ${JSON.stringify(data, null, 4)}`)
       apiResponse.lastStatus.response = data
       if (!apiResponse.lastStatus.ok) {
-        errorMessage = `Payment Failed, try again later - ${handleError(apiResponse.lastStatus).detail}`
+        errorMessage = `Payment Failed - ${handleError(apiResponse.lastStatus).detail}`
         currentState = validStates.PAYMENTERROR
         return
       }
@@ -189,8 +193,8 @@
       return
     } catch (err) {
       console.log('handlePaymentSubmission-err' + err)
-      currentState = validStates.PAYMENTERROR
       errorMessage = 'Payment failed'
+      currentState = validStates.PAYMENTERROR
       handleUnexpectedError(err)
       throw new Error(err)
     }
@@ -199,12 +203,13 @@
   // $: apiThings = apiResponse //debugging
 </script>
 
+<pre>currentState: {currentState}</pre>
 <div>
   {#if !$currentUserName}
-    <h1 class="mb-6 text-xl font-bold">Please enrol first</h1>
+    <h1 class="mb-6 text-xl font-bold">You must enter a name for this enrolment</h1>
     <a
       class="rounded-md bg-secondary-300 px-5 py-1 text-sm font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg"
-      href="https://u3abermagui.com.au/current-program/">Back to the Program</a
+      href="/">Back to the Enrolment Page</a
     >
   {:else}
     <div class="mt-4">
@@ -225,7 +230,7 @@
         class="m-6 h-16 w-16 animate-spin rounded-full border-8 border-solid border-accent"
       />
     {/if}
-    {#if currentState === validStates.COMMENCING || currentState === validStates.PAYMENTERROR}
+    {#if currentState === validStates.COMMENCING || currentState === validStates.PAYING || currentState === validStates.PAYMENTERROR}
       <div class="mt-6 max-w-prose px-3">
         <form
           on:submit|preventDefault={() => {
@@ -235,7 +240,8 @@
           method="POST"
         >
           <!-- this is the container that gets the Credit Card fields dropped into it by Square -->
-          <div id="card-container" class="w-100 mx-auto" />
+          <!-- hide it when we are busy doing anything -->
+          <div hidden={fetchingData} id="card-container" class="w-100 mx-auto" />
           <button
             type="submit"
             disabled={fetchingData}

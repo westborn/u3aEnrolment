@@ -21,6 +21,12 @@ export const actions = {
         message: 'Please enter a valid email address',
       })
     }
+    if (name === '') {
+      return fail(400, {
+        error: true,
+        message: 'Please enter your name',
+      })
+    }
     if (coursesEnroled.length === 0) {
       return fail(400, {
         error: true,
