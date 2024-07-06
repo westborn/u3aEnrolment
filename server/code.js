@@ -1,23 +1,9 @@
-function testadd() {
-  const ssId = wbLib.getCONFIG('AA_CourseCONFIG.JSON').COURSE_SHEET_ID
-  const ss = SpreadsheetApp.openById(ssId)
-  const res = addEnrolments(
-    {
-      name: 'George1 Stone',
-      email: 'george1@westborn.com.au',
-      coursesEnroled: [{ title: 'A Conversation', status: 'Enrol?' }],
-    },
-    ss
-  )
-  console.log(res.getContent())
-}
-
-function testget() {
-  const ssId = wbLib.getCONFIG('AA_CourseCONFIG.JSON').COURSE_SHEET_ID
-  const ss = SpreadsheetApp.openById(ssId)
-  const res = getCourseDetails('', ss)
-  console.log(res.getContent())
-}
+// function testget() {
+//   const ssId = wbLib.getCONFIG('AA_CourseCONFIG.JSON').COURSE_SHEET_ID
+//   const ss = SpreadsheetApp.openById(ssId)
+//   const res = getCourseDetails('', ss)
+//   console.log(res.getContent())
+// }
 
 function doPost(e) {
   // Original URL:    ScriptApp.getService().getUrl()
@@ -100,25 +86,37 @@ function addEnrolments(request, ss) {
   const headers = enrolmentSheet.getRange(1, 1, 1, enrolmentSheet.getLastColumn()).getValues().shift()
   const nameCheckCol = headers.indexOf('nameCheck') + 1
   const emailCheckCol = headers.indexOf('emailCheck') + 1
-  const lastRow = enrolmentSheet.getLastRow() - 1
-  var fillDownRange
+  const membershipStatusCheckCol = headers.indexOf('membershipStatus') + 1
+
+  function setFormulaAndFillDown(sheet, col, formula) {
+    const lastRow = sheet.getLastRow() - 1 // Adjusted to get the correct last row
+    sheet.getRange(2, col, 1, 1).setFormula(formula)
+    let fillDownRange = sheet.getRange(2, col, lastRow)
+    sheet.getRange(2, col, 1, 1).copyTo(fillDownRange)
+  }
 
   // nameCheck formula
-  enrolmentSheet
-    .getRange(2, nameCheckCol, 1, 1)
-    .setFormula('=ArrayFormula(index(Members,match(TRUE, exact(B2,memberName),0),1))')
-  fillDownRange = enrolmentSheet.getRange(2, nameCheckCol, lastRow)
-  enrolmentSheet.getRange(2, nameCheckCol, 1, 1).copyTo(fillDownRange)
-
+  setFormulaAndFillDown(
+    enrolmentSheet,
+    nameCheckCol,
+    '=ArrayFormula(index(Members,match(TRUE, exact(B2,memberName),0),1))'
+  )
   // emailCheck formula
-  enrolmentSheet
-    .getRange(2, emailCheckCol, 1, 1)
-    .setFormula('=ArrayFormula(index(Members,match(TRUE, exact(C2,memberEmail),0),1))')
-  fillDownRange = enrolmentSheet.getRange(2, emailCheckCol, lastRow)
-  enrolmentSheet.getRange(2, emailCheckCol, 1, 1).copyTo(fillDownRange)
+  setFormulaAndFillDown(
+    enrolmentSheet,
+    emailCheckCol,
+    '=ArrayFormula(index(Members,match(TRUE, exact(C2,memberEmail),0),1))'
+  )
+  // membershipStatus formula
+  setFormulaAndFillDown(enrolmentSheet, membershipStatusCheckCol, '=vlookup(B2,Members,7,false)')
 
-  //get the list of titles that the user enroled for and update 'CourseDetails' sheet
-  const enroledCourses = request.coursesEnroled.map((course) => course.title)
+  //get the list of titles that the user enroled, with a status of "Enrol?"
+  const enroledCourses = request.coursesEnroled.reduce((acc, course) => {
+    if (course.status === 'Enrol?') {
+      acc.push(course.title)
+    }
+    return acc
+  }, [])
   updateEnrolmentStats(ss, enroledCourses)
 
   // send an email confirmation with all enrolments
@@ -142,9 +140,11 @@ function addEnrolments(request, ss) {
       ${buildHTMLOutput(waitlistedCourseList, allCourses)}`
       : ''
 
+  const paymentReceipt = request.paymentReceipt ? `<p>Payment Receipt: ${request.paymentReceipt}</p><br>` : ''
+
   const fieldReplacer = {
     memberName: request.name,
-    classInfo: enrolHTML + waitlistHTML,
+    classInfo: enrolHTML + paymentReceipt + waitlistHTML,
   }
   // get the draft Gmail message to use as a template
   const emailTemplate = wbLib.getGmailTemplateFromDrafts('TEMPLATE - Course Enrolment Confirmation')
@@ -214,11 +214,9 @@ function updateEnrolmentStats(ss, enroledCourses) {
 
   for (const enroledCourse of enroledCourses) {
     const selectedCourse = allCourses.find((course) => course.title === enroledCourse)
-    if (selectedCourse.courseStatus === 'Enrol?') {
-      selectedCourse.numberCurrentlyEnroled++
-      selectedCourse.courseStatus =
-        selectedCourse.max > 0 && selectedCourse.numberCurrentlyEnroled >= selectedCourse.max ? 'Waitlist?' : 'Enrol?'
-    }
+    selectedCourse.numberCurrentlyEnroled++
+    selectedCourse.courseStatus =
+      selectedCourse.max > 0 && selectedCourse.numberCurrentlyEnroled >= selectedCourse.max ? 'Waitlist?' : 'Enrol?'
   }
 
   var columnData, columnNumber

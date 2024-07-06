@@ -1,6 +1,15 @@
 /* Write your global styles here, in PostCSS syntax */
 @tailwind base;
 @tailwind components;
+
+.tooltip {
+  @apply invisible absolute;
+}
+
+.has-tooltip:hover .tooltip {
+  @apply visible z-50;
+}
+
 @tailwind utilities;
 
 body {
