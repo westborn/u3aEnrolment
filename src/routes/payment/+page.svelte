@@ -203,7 +203,6 @@
   // $: apiThings = apiResponse //debugging
 </script>
 
-<pre>currentState: {currentState}</pre>
 <div>
   {#if !$currentUserName}
     <h1 class="mb-6 text-xl font-bold">You must enter a name for this enrolment</h1>
