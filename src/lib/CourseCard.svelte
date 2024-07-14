@@ -6,7 +6,7 @@
   $: ({ courseStatus, title, summary, description, dates, time, location, courseCost } = course)
 
   $: coursePaymentRequired = courseCost > 0 && courseStatus === 'Enrol?' ? true : false
-  $: coursePaymentText = coursePaymentRequired ? ' (Payable on enrolment via Credit Card)' : ''
+  $: coursePaymentText = coursePaymentRequired ? ' (Payable on enrolment via Credit or Debit Card)' : ''
 
   //hack to allow component to have checkbox state
   export let group
