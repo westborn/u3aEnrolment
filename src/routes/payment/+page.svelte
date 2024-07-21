@@ -5,7 +5,13 @@
   import { goto } from '$app/navigation'
 
   import { currentUserEmail, currentUserName, coursesEnroled, courseDetails } from '$lib/stores.js'
-  import { handleError, handleUnexpectedError, processResponse, apiResponse } from '$lib/utilities.js'
+  import {
+    convertToDollarsAndCents,
+    handleError,
+    handleUnexpectedError,
+    processResponse,
+    apiResponse,
+  } from '$lib/utilities.js'
   import { sendToSheetsApp } from '$lib/sheetsAPI.js'
 
   apiResponse.lastStatus = {}
@@ -215,7 +221,7 @@
       <p class="text-xl mt-6">For: {$currentUserName}</p>
       <p class="mt-1 px-10">{$currentUserEmail}</p>
       <p class="mt-6 text-xl text-primary-400">
-        Your enrolment has a total fee of ${costOfEnrolment}
+        Your enrolment has a total fee of {convertToDollarsAndCents(costOfEnrolment)}
       </p>
     </div>
     {#if errorMessage}
@@ -245,7 +251,7 @@
             type="submit"
             disabled={fetchingData}
             class="mt-8 inline-block w-auto rounded-lg bg-secondary-300 px-7 py-3 font-semibold text-white shadow-md transition duration-150 ease-in-out hover:bg-secondary-400 hover:shadow-lg focus:bg-secondary-400 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-secondary-200 active:shadow-lg disabled:cursor-not-allowed"
-            >Pay Enrolment of ${costOfEnrolment}</button
+            >Pay Enrolment of {convertToDollarsAndCents(costOfEnrolment)}</button
           >
         </form>
       </div>

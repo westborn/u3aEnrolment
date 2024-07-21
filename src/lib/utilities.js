@@ -16,6 +16,14 @@ export function isNumeric(str) {
   ) // ...and ensure strings of whitespace fail
 }
 
+export const convertToDollarsAndCents = (price) => {
+  if (!price) return ''
+  return price.toLocaleString('en-AU', {
+    style: 'currency',
+    currency: 'AUD',
+  })
+}
+
 export let apiResponse = {
   lastStatus: {
     ok: true,
