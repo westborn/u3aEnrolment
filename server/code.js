@@ -144,15 +144,16 @@ function addEnrolments(request, ss) {
 
   const memberData = ss.getSheetByName('MemberDetails').getDataRange().getValues()
   const allMembers = wbLib.getJsonArrayFromData(memberData)
-  const memberEmail = allMembers.find((member) => member.email === request.email)
-  const knownEmailMessage = memberEmail
-    ? ``
-    : `
+  const member = allMembers.find((member) => member.email === request.email)
+
+  let knownEmailMessage = ''
+  if (!member || member.status !== 'Active') {
+    knownEmailMessage = `
 <p style="color: #FF0000">Please be aware that we were not able to adequately verify your email address.
 <br>Your membership may have lapsed, or you may not be a member yet. (or we may have slipped up somewhere)
 <br>We will contact you directly to try to resolve your membership status, however, you have been enrolled/waitlisted for the courses shown in this email.
 <br></p>`
-
+  }
   const fieldReplacer = {
     memberName: request.name,
     classInfo: enrolHTML + paymentReceipt + waitlistHTML + knownEmailMessage,
