@@ -1,5 +1,7 @@
 <script>
   import { currentUserEmail, currentUserName, courseDetails, coursesEnroled } from '$lib/stores.js'
+  import { convertToDollarsAndCents } from '$lib/utilities.js'
+
   import { enhance } from '$app/forms'
 
   import CourseCard from '../lib/CourseCard.svelte'
@@ -17,7 +19,8 @@
     return course.status === 'Enrol?' ? acc + Number(course.courseCost) : acc
   }, 0)
 
-  $: displayCostButton = costOfEnrolment == 0 ? 'Enrol Me!' : `Enrol Me! (Total Cost: $${costOfEnrolment.toString()})`
+  $: displayCostButton =
+    costOfEnrolment == 0 ? 'Enrol Me!' : `Enrol Me! (Total Cost: ${convertToDollarsAndCents(costOfEnrolment)})`
 
   export let form
   let checkedGroup = []

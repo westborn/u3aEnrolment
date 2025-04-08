@@ -1,6 +1,7 @@
 <script>
   import Accordion from './components/Accordion.svelte'
   import { coursesEnroled } from '$lib/stores.js'
+  import { convertToDollarsAndCents } from '$lib/utilities.js'
 
   export let course
   $: ({ courseStatus, title, summary, description, dates, time, location, courseCost } = course)
@@ -61,7 +62,7 @@
       <p class="text-sm">{location}</p>
       {#if coursePaymentRequired}
         <p class="text-sm">
-          Cost: ${courseCost}
+          Cost: {convertToDollarsAndCents(courseCost)}
           <span class="text-red-700">{coursePaymentText}</span>
         </p>
       {/if}
