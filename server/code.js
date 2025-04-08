@@ -56,17 +56,6 @@ function validateEmail(mail) {
   return false
 }
 
-function isMemberEmailKnown(email) {
-  const memberData = ss.getSheetByName('MemberDetails').getDataRange().getValues()
-  const allMembers = wbLib.getJsonArrayFromData(memberData)
-
-  const memberEmail = allMembers.find((member) => member.email === email)
-  if (memberEmail) {
-    return true
-  }
-  return false
-}
-
 function addEnrolments(request, ss) {
   if (!request.name || request.name.trim() === '') {
     return sendResponse('error', 'Invalid name for enrolment')
@@ -153,12 +142,15 @@ function addEnrolments(request, ss) {
 
   const paymentReceipt = request.paymentReceipt ? `<p>Payment Receipt: ${request.paymentReceipt}</p><br>` : ''
 
-  const knownEmailMessage = isMemberEmailKnown(request.email)
-    ? `<p>We have your email address on file.</p><br>`
+  const memberData = ss.getSheetByName('MemberDetails').getDataRange().getValues()
+  const allMembers = wbLib.getJsonArrayFromData(memberData)
+  const memberEmail = allMembers.find((member) => member.email === request.email)
+  const knownEmailMessage = memberEmail
+    ? ``
     : `
-<p>Please be aware that we were not able to adequately verify your email address.
+<p style="color: #FF0000">Please be aware that we were not able to adequately verify your email address.
 <br>Your membership may have lapsed, or you may not be a member yet. (or we may have slipped up somewhere)
-<br>We will contact you directly to try to resolve your membership, however,<br>you have been enrolled/waitlisted for the courses shown below.
+<br>We will contact you directly to try to resolve your membership status, however, you have been enrolled/waitlisted for the courses shown in this email.
 <br></p>`
 
   const fieldReplacer = {
