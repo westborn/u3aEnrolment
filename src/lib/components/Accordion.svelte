@@ -2,7 +2,6 @@
   export let open = false
   import { slide } from 'svelte/transition'
   const handleClick = () => {
-    console.log('open')
     open = !open
   }
 </script>
